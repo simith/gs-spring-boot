@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name = "viewport" content= "with=device-width", initial-scale=1.0>
+    <title>Clinic Website Design</title>
+    <link rel="stylesheet" href= "style1.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;700&display=swap" rel="stylesheet">
+<link rel= "stylesheet" href = "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+      <script type="application/javascript">
+      function init(){
+
+          $.ajax({
+              url: "http://localhost:8080/doctors",
+              type: 'GET',
+              dataType: 'json', // added data type
+              success: function(res) {
+                  select = document.getElementById('doctors');
+
+                  for (var i = 0; i<res.length; i++){
+                      var opt = document.createElement('option');
+                      opt.value = res[i].id;
+                      opt.innerHTML = res[i].name;
+                      select.appendChild(opt);
+                  }
+
+                  //alert(JSON.stringify(res));
+              }
+          });
+      }
+
+      function bookSlot(){
+          //Get all the required fileds, package it in a js object and send
+          // it tothe backend
+          var fullName = document.getElementById('fullName');
+          var age = document.getElementById('age');
+          var bookingDate = document.getElementById('bookingDate');
+          var noteToDoctor = document.getElementById('noteToDoctor');
+          var selectedSlot = document.getElementById('selectedSlot');
+          var selectedDoctor = document.getElementById('doctors')
+
+          var obj = new Object();
+          obj['name'] = fullName.value;
+          obj['age'] = age.value;
+          obj['bookingDate'] = bookingDate.value;
+          obj['noteToDoctor'] = noteToDoctor.value;
+          obj['selectedSlot'] = selectedSlot.value;
+          obj['selectedDoctorId'] = selectedDoctor.value;
+
+
+
+          var saveData = $.ajax({
+              type: 'POST',
+              url: "http://localhost:8080/slots",
+              data: JSON.stringify(obj),
+              contentType: "application/json",
+              success: function(resultData) {
+                  var bookingFormElementDiv = document.getElementById('booking-form');
+                  var msg = "<div>Thank you, " + obj['name'] + " you are booked for "+ obj['bookingDate'] + " at "+ obj['selectedSlot'] + "</div>";
+                  var bookNext ="<div> <a href='http://localhost:8080/static/bookAnAppointment.html'>Book another appointment</a></div>"
+                  bookingFormElementDiv.innerHTML = msg + bookNext;
+              }
+          });
+
+
+      }
+
+
+  </script>
+
+  </head>
+  <body onLoad="init()">
+      <section class = "header1">
+          <nav>
+              <a href = "home.html"><img src="images/PDC.png"> </a>
+              <div class= "nav-links">
+                <i class = "fa fa-times" onclick="hideMenu()"></i>
+                  <ul>
+                      <li><a href="home.html">HOME</a></li>
+                      <li><a href="aboutUs.html">ABOUT</a></li>
+                      <li><a class="nav-link active" aria-current="page" href="">BOOK APPOINTMENT</a></li>
+                      <li><a href="contact.html">CONTACT</a></li>
+                  </ul>
+              </div>
+              <i class = "fa fa-bars" onclick="showMenu()"></i>
+          </nav>
+        <div class= "text-box">
+            <h1>Appointment Booking</h1>
+        </div>
+
+
+    </section>
+    <section class = "course">
+        
+<!----------booking part------------>
+<div
+class="booking-form-box">
+<h2>Appointment Booking</h2> 
+</br></br>
+<div class = "booking-form" id="booking-form">
+    <label>Full Name</label>
+    <input type = "text" class = "form-control" placeholder= "Type here" id="fullName">
+</br></br>
+    <label>Age</label> 
+    <input type = "text" class = "form-control" placeholder= "Type here" id="age">
+</br></br>
+    <label>Note for Doctor</label>
+    <input type = "text" class = "form-control" placeholder= "Type here" id="noteToDoctor">
+</br></br>
+    <div class = "input-grp">
+        <label>Date of booking</label>
+        <input type= "Date" class = "form-control select-date" id="bookingDate">
+    </br>
+    </div>
+    <div class = "input-grp">
+        <label>Doctor</label>
+        </br>
+        <select class = "custom-select" id="doctors">
+               <option value="-1">None</option>
+        </select>
+    </div>
+
+</br></br>
+<div class = "input-grp">
+    <label>Times</label>
+    </br>
+    <select class = "custom-select" id="selectedSlot">
+        <option value = "9:00">9:00</option>
+        <option value = "9:30">9:30</option>
+        <option value = "10:00">10:00</option>
+        <option value = "10:30">10:30</option>
+        <option value = "11:00">11:00</option>
+        <option value = "11:30">11:30</option>
+        <option value = "12:00">12:00</option>
+        <option value = "12:30">12:30</option>
+        <option value = "13:00">13:00</option>
+        <option value = "13:30">13:30</option>
+        <option value = "14:00">14:00</option>
+        <option value = "14:30">14:30</option>
+        <option value = "15:00">15:00</option>
+        <option value = "15:30">15:30</option>
+        <option value = "16:00">16:00</option>
+        <option value = "16:30">16:30</option>
+        <option value = "17:00">17:00</option>
+    </select>
+</div>
+    <div
+        class ="input-grp">
+        <button type = "button" classes= "btn btn primary" onClick="bookSlot()">Submit</button>
+    </div>
+    
+
+    
+    </div>
+
+</div>
+</br></br></br></br></br></br></br></br>
+
+</div>
+
+    
+
+<!-------JavaScript for toggle menu-------->
+      <script>
+          var navLinks= document.getElementById("navLinks");
+          
+          function showMenu(){
+              navLinks.style.right = "0";
+          }
+          function hideMenu(){
+              navLinks.style.right = "-200px";
+          }
+      </script>
+
+  </body>
+  </html>
+  

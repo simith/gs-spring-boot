@@ -10,10 +10,14 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
+	google()
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.google.code.gson:gson:2.8.2'
+	implementation 'org.postgresql:postgresql:42.2.10'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
